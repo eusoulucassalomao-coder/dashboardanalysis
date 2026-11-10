@@ -3,89 +3,121 @@ import streamlit as st
 
 def apply_custom_style():
     """
-    Aplica estilos CSS de alta gama para un dashboard de trading profesional.
+    Injeta um design Hyper-Modern de Terminal de Trading.
     """
     st.markdown("""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
 
-        html, body, [class*="css"] {
-            font-family: 'Inter', sans-serif;
-        }
-
+        /* Reset e Fundo */
         .main {
-            background-color: #0B0E11;
-            color: #EAECEF;
+            background: radial-gradient(circle at top right, #1a1c23, #08090a);
+            color: #ffffff;
         }
 
-        /* Metrics Cards */
-        [data-testid="stMetric"] {
-            background-color: #1E2329;
-            border: 1px solid #2B3139;
-            padding: 20px !important;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-        [data-testid="stMetric"]:hover {
-            transform: translateY(-2px);
-            border-color: #F0B90B;
+        /* Esconder cabeçalho padrão do Streamlit */
+        header {visibility: hidden;}
+        footer {visibility: hidden;}
+
+        /* Sidebar Modernizada */
+        [data-testid="stSidebar"] {
+            background-color: rgba(15, 17, 21, 0.95);
+            border-right: 1px solid #F0B90B33;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
         }
 
-        /* Tabs Styling */
+        /* Tabs Modernas estilo Apple/Binance */
         .stTabs [data-baseweb="tab-list"] {
-            background-color: #1E2329;
-            padding: 10px 20px;
-            border-radius: 12px 12px 0 0;
-            gap: 15px;
+            gap: 10px;
+            background-color: rgba(255, 255, 255, 0.03);
+            padding: 8px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .stTabs [data-baseweb="tab"] {
-            color: #848E9C;
-            font-weight: 600;
-            padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 10px !important;
+            padding: 10px 25px !important;
             border: none !important;
+            color: #848e9c !important;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
         }
         .stTabs [aria-selected="true"] {
-            background-color: #2B3139 !important;
-            color: #F0B90B !important;
+            background: linear-gradient(135deg, #F0B90B 0%, #ca9600 100%) !important;
+            color: #000000 !important;
+            font-weight: bold !important;
+            box-shadow: 0 4px 15px rgba(240, 185, 11, 0.3);
         }
 
-        /* Sidebar Styling */
-        [data-testid="stSidebar"] {
-            background-color: #181A20;
-            border-right: 1px solid #2B3139;
+        /* Estilização de Containers (Cards Customizados) */
+        .trading-card {
+            background: rgba(30, 35, 41, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 185, 11, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: transform 0.3s, border 0.3s;
+        }
+        .trading-card:hover {
+            border: 1px solid #F0B90B;
+            transform: translateY(-5px);
         }
 
-        /* Success/Error messages */
-        .stAlert {
-            border-radius: 12px;
-            border: none;
+        /* Títulos */
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .main-title {
+            background: linear-gradient(to right, #F0B90B, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5rem !important;
+            font-weight: 800;
         }
 
-        /* Buttons */
+        /* Glow para botões */
         .stButton button {
-            background-color: #F0B90B;
-            color: #000000;
-            border-radius: 8px;
-            font-weight: 700;
-            border: none;
-            width: 100%;
+            background: linear-gradient(90deg, #F0B90B, #ca9600) !important;
+            color: black !important;
+            border: none !important;
+            border-radius: 12px !important;
+            font-weight: 800 !important;
+            height: 50px !important;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(240, 185, 11, 0.2);
         }
         .stButton button:hover {
-            background-color: #F8D33A;
-            color: #000000;
-        }
-
-        /* News Cards */
-        .news-container {
-            background-color: #1E2329;
-            border: 1px solid #2B3139;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            box-shadow: 0 0 25px rgba(240, 185, 11, 0.5) !important;
+            transform: scale(1.02);
         }
     </style>
+    """, unsafe_allow_html=True)
+
+def render_custom_metric(label, value, delta=None, color="#F0B90B"):
+    """
+    Renderiza um card de métrica ultra-moderno em HTML puro.
+    """
+    delta_html = ""
+    if delta:
+        d_color = "#0ecb81" if "+" in delta or float(delta.replace('%','')) > 0 else "#f6465d"
+        delta_html = f"<div style='color: {d_color}; font-size: 0.9rem; font-weight: bold;'>{delta}</div>"
+
+    st.markdown(f"""
+    <div style="
+        background: rgba(255, 255, 255, 0.03);
+        border-left: 4px solid {color};
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        backdrop-filter: blur(4px);
+    ">
+        <div style="color: #848e9c; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">{label}</div>
+        <div style="color: #ffffff; font-size: 1.8rem; font-weight: 800; margin: 5px 0;">{value}</div>
+        {delta_html}
+    </div>
     """, unsafe_allow_html=True)
 
 def render_metric_card(label, value, delta=None, sentiment=None):

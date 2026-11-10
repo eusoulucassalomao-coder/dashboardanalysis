@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from backend_data import get_stock_data, get_news_sentiment, get_daily_stock_data_alpha_vantage
 from auth import login, logout
-from ui_components import apply_custom_style, render_how_it_works
+from ui_components import apply_custom_style, render_how_it_works, render_custom_metric
 
 # Configuración de la página
 st.set_page_config(
@@ -40,7 +40,7 @@ with st.sidebar:
         logout()
 
 # --- Dashboard Principal --- #
-st.title("📈 Dashboard Profesional de Análisis de Acciones")
+st.markdown("<h1 class='main-title'>📈 Dashboard Profesional de Análisis</h1>", unsafe_allow_html=True)
 st.caption("Herramienta MVP impulsada por IA para análisis de mercado y sentimiento de noticias.")
 
 # Tabs principales
@@ -68,21 +68,21 @@ with tab1:
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
-            st.metric("Último Precio", f"${last_price:.2f}", f"{change_percent:.2f}%")
+            render_custom_metric("Último Precio", f"${last_price:.2f}", f"{change_percent:+.2f}%", "#F0B90B")
 
         with col2:
-            st.metric("Precio Máximo (Período)", f"${stock_data_yf['High'].max():.2f}")
+            render_custom_metric("Máximo (Período)", f"${stock_data_yf['High'].max():.2f}", color="#0ecb81")
 
         with col3:
-            st.metric("Precio Mínimo (Período)", f"${stock_data_yf['Low'].min():.2f}")
+            render_custom_metric("Mínimo (Período)", f"${stock_data_yf['Low'].min():.2f}", color="#f6465d")
 
         with col4:
             if news_sentiment_data:
                 avg_score = sum([n['compound_score'] for n in news_sentiment_data]) / len(news_sentiment_data)
-                sentiment_label = "Positivo" if avg_score >= 0.05 else ("Negativo" if avg_score <= -0.05 else "Neutral")
-                st.metric("Sentimiento IA", sentiment_label, f"Score: {avg_score:.2f}")
+                sentiment_label = "Positivo 🚀" if avg_score >= 0.05 else ("Negativo ⚠️" if avg_score <= -0.05 else "Neutral ⚖️")
+                render_custom_metric("Sentimiento IA", sentiment_label, f"Score: {avg_score:.2f}", "#3861fb")
             else:
-                st.metric("Sentimiento IA", "N/D")
+                render_custom_metric("Sentimiento IA", "N/D", color="#848e9c")
 
         st.markdown("### Gráfico Principal")
         fig = go.Figure(data=[go.Candlestick(
@@ -96,7 +96,20 @@ with tab1:
         fig.update_layout(
             template="plotly_dark",
             xaxis_rangeslider_visible=False,
-            height=500
+            height=500,
+            plot_bgcolor='#161a1e',
+            paper_bgcolor='#161a1e',
+            font=dict(color='#EAECEF'),
+            xaxis=dict(
+                showgrid=True,
+                gridcolor='#2B3139',
+                tickfont=dict(color='#848E9C')
+            ),
+            yaxis=dict(
+                showgrid=True,
+                gridcolor='#2B3139',
+                tickfont=dict(color='#848E9C')
+            )
         )
         st.plotly_chart(fig, use_container_width=True)
     else:
