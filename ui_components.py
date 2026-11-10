@@ -102,8 +102,20 @@ def render_custom_metric(label, value, delta=None, color="#F0B90B"):
     """
     delta_html = ""
     if delta:
-        d_color = "#0ecb81" if "+" in delta or float(delta.replace('%','')) > 0 else "#f6465d"
-        delta_html = f"<div style='color: {d_color}; font-size: 0.9rem; font-weight: bold;'>{delta}</div>"
+        # Tenta converter apenas os números para verificar a cor, ignorando '%'
+        try:
+            # Remove o '%' se existir e tenta converter para float
+            clean_delta = delta.replace('%', '').strip()
+            # Remove o '+' se existir
+            if clean_delta.startswith('+'):
+                clean_delta = clean_delta[1:]
+
+            value = float(clean_delta)
+            d_color = "#0ecb81" if value > 0 else "#f6465d"
+            delta_html = f"<div style='color: {d_color}; font-size: 0.9rem; font-weight: bold;'>{delta}</div>"
+        except ValueError:
+            # Se não for um número (ex: "Score: 0.03"), deixa cinza
+            delta_html = f"<div style='color: #848e9c; font-size: 0.9rem; font-weight: bold;'>{delta}</div>"
 
     st.markdown(f"""
     <div style="
