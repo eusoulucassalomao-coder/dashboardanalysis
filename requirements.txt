@@ -1,0 +1,7 @@
+streamlit
+yfinance
+nltk
+pandas
+requests
+plotly
+streamlit-authenticator
